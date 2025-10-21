@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квіз: Принципи Багатофакторної Автентифікації (MFA)</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .instruction {
+            font-style: normal;
+            font-size: 1.08em;
+            color: #555;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: normal;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🔐 Квіз: Три Принципи Багатофакторної Автентифікації (MFA)</h1>
+
+    <p class="instruction">Перетягніть кожен метод автентифікації до відповідного принципу MFA.</p>
+
+    <div class="container">
+
+        <div class="data-source">
+            <h2>Варіанти</h2>
+            <div id="options-list">
+                <div class="draggable-item" draggable="true" data-type="have">Фізичний токен (YubiKey)</div>
+                <div class="draggable-item" draggable="true" data-type="know">Пароль або PIN-код</div>
+                <div class="draggable-item" draggable="true" data-type="are">**Відбиток пальця**</div>
+                <div class="draggable-item" draggable="true" data-type="have">Одноразовий пароль (OTP) з мобільного додатку</div>
+                <div class="draggable-item" draggable="true" data-type="are">**Розпізнавання обличчя**</div>
+                <div class="draggable-item" draggable="true" data-type="know">Кодова фраза (Passphrase)</div>
+                <div class="draggable-item" draggable="true" data-type="have">Push-сповіщення (Approve/Deny)</div>
+                <div class="draggable-item" draggable="true" data-type="are">Голосова автентифікація (Voice Print)</div>
+                <div class="draggable-item" draggable="true" data-type="know">Секретне питання/відповідь</div>
+                <div class="draggable-item" draggable="true" data-type="have">SIM-картка / SMS-код</div>
+                <div class="draggable-item" draggable="true" data-type="are">**Сканування сітківки**</div>
+                <div class="draggable-item" draggable="true" data-type="know">Графічний ключ (Pattern Lock)</div>
+                <div class="draggable-item" draggable="true" data-type="are">Аналіз динаміки набору тексту</div>
+                <div class="draggable-item" draggable="true" data-type="have">Резервні (Recovery) коди</div>
+
+            </div>
+        </div>
+
+        <div class="drop-targets">
+
+            <div class="drop-zone" id="you-have" data-accept="have">
+                <h2>💎 You Have (Володіння)</h2>
+            </div>
+
+            <div class="drop-zone" id="you-know" data-accept="know">
+                <h2>🧠 You Know (Знання)</h2>
+            </div>
+
+            <div class="drop-zone" id="you-are" data-accept="are">
+                <h2>🧬 You Are (Притаманність)</h2>
+            </div>
+
+        </div>
+
+    </div>
+    
+    <button id="check-button">Перевірити відповіді</button>
+    <div class="feedback" id="quiz-feedback"></div>
+
+    <script>
+        const draggables = document.querySelectorAll('.draggable-item');
+        const dropTargets = document.querySelectorAll('.drop-zone');
+        const checkButton = document.getElementById('check-button');
+        const feedbackDiv = document.getElementById('quiz-feedback');
+        let draggedItem = null;
+
+        // 1. ЛОГІКА DRAG-AND-DROP
+
+        draggables.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = item;
+                // Встановлюємо ID для унікальної ідентифікації при перетягуванні
+                e.dataTransfer.setData('text/plain', item.id || item.textContent); 
+                setTimeout(() => item.style.opacity = '0.5', 0);
+            });
+
+            item.addEventListener('dragend', () => {
+                // draggedItem.style.opacity = '1'; // Оновлення відбудеться після додавання в зону
+                // draggedItem = null; // Не обнуляємо тут, щоб мати до нього доступ у drop
+            });
+        });
+
+        dropTargets.forEach(target => {
+            target.addEventListener('dragover', (e) => {
+                e.preventDefault(); 
+                target.classList.add('drag-over');
+            });
+
+            target.addEventListener('dragleave', (e) => {
+                target.classList.remove('drag-over');
+            });
+
+            target.addEventListener('drop', (e) => {
+                e.preventDefault();
+                target.classList.remove('drag-over');
+                
+                if (draggedItem) {
+                    // Перевіряємо, чи вже немає такого елемента в зоні
+                    if (draggedItem.parentNode.id !== target.id) {
+                        target.appendChild(draggedItem);
+                        draggedItem.classList.remove('correct', 'incorrect'); // Скидання кольору при переміщенні
+                        draggedItem.style.opacity = '1'; // Повертаємо прозорість
+                        draggedItem = null; // Обнуляємо після успішного скидання
+                    }
+                }
+            });
+        });
+
+
+        // 2. ЛОГІКА ПЕРЕВІРКИ
+
+        checkButton.addEventListener('click', () => {
+            let correctCount = 0;
+            let totalItems = 0;
+            const optionsList = document.getElementById('options-list');
+            
+            // Збираємо всі елементи, які мають бути перетягнуті (тобто ті, що не в початковому списку)
+            const allItems = document.querySelectorAll('.draggable-item');
+
+            // Перевірка, чи всі елементи перетягнуті
+            if (optionsList.children.length > 0) {
+                 feedbackDiv.textContent = '❌ Будь ласка, перетягніть усі варіанти в відповідні зони.';
+                 feedbackDiv.style.color = '#e74c3c';
+                 // Знімаємо позначки, якщо вони були
+                 allItems.forEach(item => item.classList.remove('correct', 'incorrect'));
+                 return;
+            }
+
+            // Проходимо по всіх зонах перетягування
+            dropTargets.forEach(target => {
+                const acceptedType = target.getAttribute('data-accept');
+                
+                // Проходимо по всіх елементах у цій зоні
+                Array.from(target.children).forEach(item => {
+                    if (item.classList.contains('draggable-item')) {
+                        totalItems++;
+                        const itemType = item.getAttribute('data-type');
+                        
+                        if (itemType === acceptedType) {
+                            item.classList.add('correct');
+                            item.classList.remove('incorrect');
+                            correctCount++;
+                        } else {
+                            item.classList.add('incorrect');
+                            item.classList.remove('correct');
+                        }
+                    }
+                });
+            });
+
+            // Відображення результату
+            if (totalItems > 0) {
+                const percentage = Math.round((correctCount / totalItems) * 100);
+                feedbackDiv.textContent = `Ваш результат: ${correctCount} із ${totalItems} правильних (${percentage}%). 💪`;
+                feedbackDiv.style.color = (percentage >= 100) ? '#27ae60' : (percentage >= 70 ? '#f39c12' : '#e74c3c');
+            } else {
+                feedbackDiv.textContent = 'Перетягніть елементи, щоб почати перевірку.';
+                feedbackDiv.style.color = '#333';
+            }
+        });
+    </script>
+
+</body>
+</html>

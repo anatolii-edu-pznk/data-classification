@@ -1,0 +1,170 @@
+/* Unified style for all pages */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f7f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+.main-container, .container {
+    max-width: 1200px;
+    margin: 60px auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    padding: 40px 30px 30px 30px;
+    text-align: center;
+    display: flex;
+    gap: 20px;
+}
+h1 {
+    color: #2c3e50;
+    margin-bottom: 30px;
+    text-align: center;
+}
+ul {
+    list-style: none;
+    padding: 0;
+}
+li {
+    margin: 18px 0;
+}
+a {
+    display: inline-block;
+    font-size: 1.15em;
+    color: #1abc9c;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    background: #e8f8f5;
+    transition: background 0.2s, color 0.2s;
+    font-weight: bold;
+}
+a:hover {
+    background: #1abc9c;
+    color: #fff;
+}
+.desc {
+    color: #555;
+    font-size: 0.98em;
+    margin-top: 6px;
+}
+.data-source {
+    flex: 0 0 280px;
+    padding: 15px;
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 70vh;
+    overflow-y: auto;
+}
+.data-source h2 {
+    margin-top: 0;
+    border-bottom: 2px solid #bdc3c7;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: 1.1em;
+}
+.draggable-item {
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #bdc3c7;
+    border-radius: 5px;
+    cursor: grab;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.3s;
+    font-weight: bold;
+}
+.draggable-item:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+.drop-targets {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+.drop-zone {
+    padding: 15px;
+    border: 3px dashed #ccc;
+    border-radius: 8px;
+    min-height: 200px;
+    transition: border-color 0.3s, background-color 0.3s;
+}
+.drop-zone h2 {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid;
+    font-size: 1.2em;
+    text-align: center;
+}
+#public { background-color: #e6ffe6; border-color: #27ae60; }
+#public h2 { color: #27ae60; border-color: #27ae60; }
+#internal { background-color: #e6f7ff; border-color: #3498db; }
+#internal h2 { color: #3498db; border-color: #3498db; }
+#confidential { background-color: #fff8e6; border-color: #f39c12; }
+#confidential h2 { color: #f39c12; border-color: #f39c12; }
+#restricted { background-color: #ffe6e6; border-color: #e74c3c; }
+#restricted h2 { color: #e74c3c; border-color: #e74c3c; }
+#you-have { background-color: #e6f7ff; border-color: #3498db; }
+#you-have h2 { color: #3498db; border-color: #3498db; }
+#you-know { background-color: #fff8e6; border-color: #f39c12; }
+#you-know h2 { color: #f39c12; border-color: #f39c12; }
+#you-are { background-color: #e6ffe6; border-color: #27ae60; }
+#you-are h2 { color: #27ae60; border-color: #27ae60; }
+.drop-zone.drag-over {
+    border-color: #8e44ad !important;
+    background-color: #f0e6ff !important;
+    box-shadow: inset 0 0 10px rgba(142, 68, 173, 0.5);
+}
+.drop-zone .draggable-item {
+    cursor: default;
+    margin-top: 10px;
+    background-color: #f2f4f6;
+    border: 1px solid #c9d2d9;
+}
+.draggable-item.correct {
+    border: 2px solid #2ecc71 !important;
+    background-color: #e8f8f5 !important;
+}
+.draggable-item.incorrect {
+    border: 2px solid #e74c3c !important;
+    background-color: #fbecec !important;
+}
+#check-button {
+    display: block;
+    margin: 30px auto 10px auto;
+    padding: 12px 25px;
+    font-size: 1.1em;
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+#check-button:hover {
+    background-color: #16a085;
+}
+.feedback {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+@media (max-width: 992px) {
+    .main-container, .container {
+        flex-direction: column;
+        max-width: 98vw;
+        padding: 10px;
+    }
+    .data-source {
+        width: auto;
+        flex: none;
+        max-height: none;
+        overflow-y: visible;
+    }
+    .drop-targets {
+        grid-template-columns: 1fr;
+    }
+}
